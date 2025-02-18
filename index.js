@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors')
 const crypto = require('crypto');
 const pkg = require('./package.json');
-const https = require('https');
+const http = require('http');
 const connections = [];
 
 // App constants
@@ -75,7 +75,7 @@ app.get('/snat', async (req, res) => {
           agent: false  // Disable connection reuse
       };
 
-      const request = https.request(options, (response) => {
+      const request = http.request(options, (response) => {
           console.log(`Connection ${i + 1}: Status -`, response.statusCode);
       });
 
