@@ -68,7 +68,7 @@ app.get('/snat', async (req, res) => {
   let connections = [];
   for (let i = 0; i < 1000; i++) {
       const options = {
-          hostname: 'http://52.163.98.156:3000',
+          hostname: '52.163.98.156:3000',
           port: 443,
           path: '/ping',
           method: 'GET',
