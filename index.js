@@ -8,7 +8,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors')
 const crypto = require('crypto');
 const pkg = require('./package.json');
-
+const https = require('https');
+const connections = [];
 
 // App constants
 const port = process.env.PORT || 3000;
@@ -61,6 +62,25 @@ app.get('/', function (req, res) {
 app.get('/api', function (req, res) {
     return res.send("Fabrikam Bank API");
 })
+
+// Send 200 request to Google for testing
+app.get('/snat', function (req, res) {
+  for (let i = 0; i < 1000; i++) {  // Increase connection count
+      const req = https.get('https://www.google.com', (resp) => {
+          console.log(`Connection ${connections.length + 1}: statusCode -`, resp.statusCode);
+      });
+
+      req.on("error", (err) => {
+          console.log("Error:", err.message);
+      });
+
+      // Do NOT call req.end() to keep connections open
+      connections.push(req);
+  }
+
+  res.send("Opened 1000 connections!");
+});
+
   
 // ----------------------------------------------
   // Create an account
