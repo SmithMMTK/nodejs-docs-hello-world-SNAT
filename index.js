@@ -83,7 +83,7 @@ app.get('/snat', async (req, res) => {
           console.log("Error:", err.message);
       });
 
-    // request.end();  // Ensures connection closes after request
+     request.end();  // Ensures connection closes after request
       connections.push(request);
   }
 
