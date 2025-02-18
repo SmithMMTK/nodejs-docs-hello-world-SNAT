@@ -64,21 +64,30 @@ app.get('/api', function (req, res) {
 })
 
 // Send 200 request to Google for testing
-app.get('/snat', function (req, res) {
-  for (let i = 0; i < 1000; i++) {  // Increase connection count
-      const req = https.get('https://www.google.com', (resp) => {
-          console.log(`Connection ${connections.length + 1}: statusCode -`, resp.statusCode);
+app.get('/snat', async (req, res) => {
+  let connections = [];
+  for (let i = 0; i < 1000; i++) {
+      const options = {
+          hostname: 'www.google.com',
+          port: 443,
+          path: '/',
+          method: 'GET',
+          agent: false  // Disable connection reuse
+      };
+
+      const request = https.request(options, (response) => {
+          console.log(`Connection ${i + 1}: Status -`, response.statusCode);
       });
 
-      req.on("error", (err) => {
+      request.on("error", (err) => {
           console.log("Error:", err.message);
       });
 
-      // Do NOT call req.end() to keep connections open
-      connections.push(req);
+      request.end();  // Ensures connection closes after request
+      connections.push(request);
   }
 
-  res.send("Opened 1000 connections!");
+  res.send("Opened 1000 separate connections!");
 });
 
   
